@@ -3,7 +3,7 @@
 
 <head>
     <meta charset=utf-8 />
-    <title>Module 12 Lab Practice Template</title>
+    <title>Map 3 Assignment</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="power-plants.js"></script>
@@ -81,7 +81,7 @@
     <footer>
         <p class='author-info'>Map authored by Daniel Cockayne</p>
         <h3>About This Map</h3>
-        <p>Click on the map to return plants 1,000km from the spot that you clicked. Double click to return plants 200km from the spot clicked. Use the menu to the top-right to toggle layers of plants on and off.</p>
+        <p>Click on the map to return plants 1,000km from the spot clicked. Double click to return plants 200km from the spot clicked. Use the menu to the top-right to toggle layers of plants on and off.</p>
         <h3>Data Sources</h3>
         <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/map-03/index.html">Github</a>.
     </footer>
@@ -184,9 +184,9 @@
         var geoJsonLayers = {};
         
         var sourcesLayers = {
-        "Hydro": hydroLayer,
-        "Coal": coalLayer,
-        "Nuclear": nuclearLayer
+        "<b style='color:#1f78b4'>Hydro</b>": hydroLayer,
+        "<b style='color:green'>Coal</b>": coalLayer,
+        "<b style='color:red'>Nuclear</b>": nuclearLayer
     }
         
             map.on('click', function(e) {
