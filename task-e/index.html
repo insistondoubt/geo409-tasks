@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Geo409 Task E Starter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        .author-info {
+            font-size: 90%;
+            font-style: italic;
+            text-align: right;
+        }
+        a:link {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:visited {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:active {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>This is a title</h1>
+        <h2>This is a subtitle</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p class='author-info'>Map authored by Daniel Cockayne</p>
+        <h3>About This Map</h3>
+        <p>Additional information about this map goes here.</p>
+        <h3>Data Sources</h3>
+        <p>Additional information about the data goes here. The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-e/index.html">Github</a>.
+        </p>
+    </footer>
+
+    <script>
+        var map;
+        var targetDiv = 'map';
+
+        var options = {
+            center: [38.0489,-84.5025],
+            zoom: 8
+        }
+        map = L.map(targetDiv, options);
+        var tiles = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-hillshading/{z}/{x}/{y}.png', {
+            attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
+            subdomains: '0123',
+            minZoom: 2,
+            maxZoom: 18
+        });
+        map.addLayer(tiles);
+        
+        var lexArea = 285.5;
+        var frankArea = 14.6;
+        var georgeArea = 15.85;
+        
+        prepareData(lexArea, frankArea, georgeArea); 
+        
+        function prepareData(lexArea, frankArea, georgeArea) { 
+            
+            var cities = ["Lexington", "Frankfort", "Georgetown"];
+            
+            var cityCoords = [
+                [38.0297, -84.4947], 
+                [38.1970, -84.8630], 
+                [38.2097, -84.5600]
+                
+            ];
+            var cityPops = [308428, 25527, 30872];
+            
+            var cityAreas = [lexArea, frankArea, georgeArea]; 
+                    
+            mapCities(cities, cityCoords, cityPops, cityAreas); 
+            
+        }
+            
+        function mapCities(cities, cityCoords, cityPops, cityAreas) {
+            
+            var units = "km";
+            
+            for(var i = 0; i < cities.length; i++) {
+
+                var density = calcPopDensity(cityPops[i], cityAreas[i], units);
+
+                var popup = "<b>"+cities[i]+"</b><br>"
+                                +"<b>Density</b>: "+ Math.round(density) +" people per sq " + units;
+                
+                // if you want to display density without decimals try Math.round(density)
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
+                
+                L.marker(cityCoords[i]).addTo(map)
+                    .bindPopup(popup);
+                
+            }
+        }
+        
+        function calcPopDensity(cityPops, cityAreas, units) {
+            if (units === "miles") {
+            var density = cityPops / cityAreas;
+                return density;
+                } else if (units === "km") { // better to use else if in case units is something weird altogether
+                var density = cityPops / (cityAreas * 1.60934 * 1.60934) // don't forget _square_ mile/km
+                 return density;
+                }
+        }
+          
+    </script>
+    
+</body>
+
+</html>

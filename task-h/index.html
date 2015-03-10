@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Day Tour of Manchester</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        .author-info {
+            font-size: 90%;
+            font-style: italic;
+            text-align: right;
+        }
+        a:link {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:visited {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:active {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .blue {
+            color: #165bb6;
+        }
+        .red {
+            color: #cc0000;
+        }
+        .purple {
+            color: #b6165b; 
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Day Tour of Manchester</h1>
+        <h2>(and one spot to ignore)</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p class='author-info'>Map authored by Daniel Cockayne</p>
+        <h3>About This Map</h3>
+        <p>Beginning in the Northern Quarter, ending in Canal Street, avoiding major shopping and clubbing complexes.</p>
+        <h3>Data Sources</h3>
+        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-h/index.html">Github</a>.
+        </p>
+    </footer>
+
+    <script>
+
+        var map = L.map('map', {
+            center: [53.481029,-2.238695],
+            zoom: 15,
+        });
+       
+        var tiles = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-hillshading/{z}/{x}/{y}.png', {
+            attribution: '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
+            subdomains: '0123',
+            minZoom: 4,
+            maxZoom: 18
+        });
+        map.addLayer(tiles);
+        
+        var placesOfInterest = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "name": "Canal Street",
+        "description": "Manchester's gay village",
+        "radius": 100
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2360825538635254,
+          53.47756244277378
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "name": "Royal Exchange Theatre",
+        "description": "Theatre-in-the-round",
+        "radius": 30
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2446978092193604,
+          53.482580860583475
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "name": "The Printworks",
+        "description": "Clubbing and bar complex. Avoid at all costs.",
+        "radius": 80
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -2.2402453422546387,
+          53.48540266175742
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#555555",
+        "stroke-width": 2,
+        "stroke-opacity": 1,
+        "fill": "#555555",
+        "fill-opacity": 0.5,
+        "name": "Northern Quarter",
+        "description": "Cocktails, shopping, brunch, (once) home of Affleck's Palace"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -2.236790657043457,
+              53.48257128401556
+            ],
+            [
+              -2.2376811504364014,
+              53.48215629732968
+            ],
+            [
+              -2.234011888504028,
+              53.48107412064633
+            ],
+            [
+              -2.230675220489502,
+              53.48353850645733
+            ],
+            [
+              -2.2331643104553223,
+              53.484904710483534
+            ],
+            [
+              -2.2353744506835938,
+              53.48333421048487
+            ],
+            [
+              -2.2354549169540405,
+              53.48335974753524
+            ],
+            [
+              -2.236340045928955,
+              53.48281708190753
+            ],
+            [
+              -2.236790657043457,
+              53.48257128401556
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#555555",
+        "stroke-width": 2,
+        "stroke-opacity": 1,
+        "name": "Day Trip",
+        "description": "Begin in NQ for brunch, catch a matinee at Royal Exchange, end at Canal Street for drinks by the water. Avoid Printworks and Arndale Center."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -2.2337543964385986,
+            53.4825936293373
+          ],
+          [
+            -2.2358036041259766,
+            53.481093274455915
+          ],
+          [
+            -2.239623069763183,
+            53.48212756733194
+          ],
+          [
+            -2.2426915168762207,
+            53.48282985059029
+          ],
+          [
+            -2.2450196743011475,
+            53.48325759924155
+          ],
+          [
+            -2.2454166412353516,
+            53.48261916683348
+          ],
+          [
+            -2.245727777481079,
+            53.48182111281225
+          ],
+          [
+            -2.24495530128479,
+            53.481738114332195
+          ],
+          [
+            -2.2446656227111816,
+            53.48175726784202
+          ],
+          [
+            -2.2448694705963135,
+            53.48111242825683
+          ],
+          [
+            -2.244000434875488,
+            53.48097196684921
+          ],
+          [
+            -2.241929769515991,
+            53.480761273865824
+          ],
+          [
+            -2.241983413696289,
+            53.48036542361291
+          ],
+          [
+            -2.2384965419769287,
+            53.478558511844
+          ],
+          [
+            -2.2381746768951416,
+            53.478781985667375
+          ],
+          [
+            -2.2366940975189205,
+            53.47792000872011
+          ],
+          [
+            -2.236093282699585,
+            53.477575213038044
+          ]
+        ]
+      }
+    }
+  ]
+}
+        
+    var pointOptions = {
+        color: "purple",
+        fillOpacity: 0.5
+    }
+    var lineOptions = {
+        color: "black",
+        opacity: 0.7
+    }
+    var polygonOptions = {
+        color: "gray",
+        fillOpacity: 0.75
+    }
+    
+        var placesLeaflet = L.geoJson(placesOfInterest, {
+        pointToLayer : function(feature, latlng) {
+            return L.circle(latlng, feature.properties.radius);
+        },
+            style: function(feature) {
+                return { 
+                    stroke: true,
+                    weight: 2, /* I realize the instructions say weight of 10, but that looked silly on my map since it starts at a high zoome level.*/
+                    dashArray: "5, 10"
+                       }
+            },
+            
+            onEachFeature: function(feature, layer) {
+                var name = feature.properties.name;
+                
+                var description = feature.properties.description
+                
+            if(feature.geometry.type == "Point") {
+                layer.setStyle(pointOptions);
+                layer.bindPopup(name.bold() + "<br />" + description)
+            }
+            if(feature.geometry.type == "LineString") {
+                layer.setStyle(lineOptions);
+            }   
+            if(feature.geometry.type == "Polygon") {
+                layer.setStyle(polygonOptions);
+                layer.bindPopup(name.bold() + "<br />" + description)
+            }
+        }
+    }).addTo(map);
+        
+    </script>
+    
+</body>
+
+</html>

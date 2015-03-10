@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Geo409 Task G Starter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+        .author-info {
+            font-size: 90%;
+            font-style: italic;
+            text-align: right;
+        }
+        a:link {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:visited {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:active {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>This is a title</h1>
+        <h2>Click things!</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p class='author-info'>Map authored by Daniel Cockayne</p>
+        <h3>About This Map</h3>
+        <p>Additional information about this map goes here.</p>
+        <h3>Data Sources</h3>
+        <p>Additional information about the data goes here. The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-g/index.html">Github</a>.
+        </p>
+    </footer>
+
+    <script>
+
+    var map = L.map('map', {
+        center: [40,-94],
+        zoom: 4,
+        minZoom: 4,
+        maxZoom: 7
+    });
+        
+    var OpenStreetMap_DE = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+        
+    map.addLayer(OpenStreetMap_DE);
+                
+    var redIguana = L.latLng(40.7718,-111.9124);
+        
+    L.marker(redIguana).addTo(map);
+        
+    map.on('click', function(e){
+        var selectedPoint = e.latlng;
+        var distance = selectedPoint.distanceTo(redIguana);
+        console.log(distance);
+        var bounds = map.getBounds();
+        var southWest = bounds.getSouthWest();
+        var distanceSWestRIguana = southWest.distanceTo(redIguana);
+        console.log(distanceSWestRIguana);
+    });
+                  
+    </script>
+    
+</body>
+
+</html>
