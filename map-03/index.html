@@ -106,6 +106,8 @@
         plants.features.sort(function(a,b) {
 			return b.properties.capacity - a.properties.capacity;
 		});
+
+
         
         var hydroLayer = L.geoJson(plants, {
         pointToLayer: function(feature,latlng) {
@@ -174,8 +176,8 @@
         var radius = Math.sqrt(val/Math.PI);
         return radius * .8;   
     }
-        
-        var layerInfo = {
+
+            var layerInfo = {
             hydroLayer: {source:"Hydro", color:'#1f78b4'}, 
             coalLayer: {source:"Coal", color:'green'},
             nuclearLayer: {source:"Nuclear", color:'red'}
@@ -318,6 +320,8 @@
 
     L.control.layers(null, sourcesLayers, { collapsed:false }).addTo(map);
         
+        console.log(feature.properties)
+
         // Begin writing your practice code here
         
 
