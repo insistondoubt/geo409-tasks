@@ -4,7 +4,7 @@
 <head>
 
     <meta charset=utf-8 />
-    <title>Module 13 Lab Template</title>
+    <title>Kentucky Housing Choropleth</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
@@ -71,24 +71,44 @@
             float: left;
             margin-right: 10px;
         }
-        
-        /* ADD YOUR ADDITIONAL STYLE RULES HERE */
-        
+        .author-info {
+            font-size: 90%;
+            font-style: italic;
+            text-align: right;
+        }
+        a:link {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:visited {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:active {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Map Title</h1>
-        <h2>Map Subtitle</h2>
+        <h1>Kentucky Housing Choropleth</h1>
+        <h2>Showing Occupied Properties</h2>
     </header>
 
     <div id='map'></div>
 
     <footer>
-        <p>Map authored by YOUR NAME</p>
-        <p>Additional information about the data and map goes here.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis urna magna, maximus nec laoreet sit amet, dictum ultricies nibh. Ut id auctor lacus. Nam a dolor et justo luctus luctus. Duis a elit eget risus dictum vehicula id eu elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sed enim nisl. Vestibulum commodo imperdiet lacus, sed facilisis erat placerat sit amet. Nulla consequat malesuada neque eget aliquet. Integer non convallis nisl, gravida ultrices ex. Fusce nec vestibulum elit. Sed elementum lectus ipsum, vulputate elementum ex laoreet a. Aenean eu ex varius, varius felis vitae, efficitur nulla. Quisque pretium laoreet ante, in sodales dui vehicula at. Mauris eu sem sapien.
+        <p class='author-info'>Map authored by Daniel Cockayne</p>
+        <h3>About This Map</h3>
+        <p>This is a choropleth map showing the number of occupied properties expressed as a proportion of the total properties per county in Kentucky.</p>
+        <p>Click on a county to see its name, and the number of occupied and total properties. The darker the blue, the higher the proportion of occupied properties in the county.</p>
+        <h3>Data Sources</h3>
+        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-i/index.html">Github</a>.
         </p>
     </footer>
 
@@ -134,52 +154,9 @@
         }); 
     
         var breaks = ss.jenks(values, 5);
-        console.log(breaks)
         return breaks;
 
         }
-
-        function drawLegend(breaks){
-
-        // create a new Leaflet control object, and position it top left
-        var legend = L.control({position: 'topleft'});
-
-        // when the legend is added to the map
-        legend.onAdd = function (map) {
-
-            // create a new HTML <div> element and give it a class name of "legend"
-            var div = L.DomUtil.create('div', 'legend');
-
-            // first append an <h3> tag to the div holding the current attribute 
-            // and norm values (i.e., the mapped phenenomena) and begin an
-            // un-ordered list (<ul>)
-            div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>"; 
-
-            // for each of our breaks
-            for (var i = 0; i < breaks.length-1; i++) {
-                // determine the color associated with each break value,
-                // including the lower range value
-                var color = getColor(breaks[i + 1], breaks);
-
-                // concatenate a list item (<li>) to the div containing 
-                // an <i> tag styled with the color and include the range values
-                // of that particular classification group
-                div.innerHTML +=
-                    '<li><span style="background:' + color + '"></span> ' +
-                    (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                    (breaks[i + 1]*100).toLocaleString() + '</li>';
-            }
-
-            // close the un-ordered list
-            div.innerHTML += "</ul>"
-
-            // return the populated div to be added to the map
-            return div;
-        };
-
-        // add the legend to the map
-        legend.addTo(map);
-    }
 
         $.getJSON("ky_counties_housing.json", function(data) {
             
@@ -195,11 +172,10 @@
                 onEachFeature: function (feature, layer) {
                     var countyName = layer.feature.properties.NAME;
                     var occupiedHomes = layer.feature.properties.OCCUPIED;
+                    var totalHomes = layer.feature.properties.TOTAL;
+                    var proportionHomes = occupiedHomes/totalHomes*100;
 
-                    console.log(countyName);
-                    console.log(occupiedHomes);
-
-                    layer.bindPopup("<b>"+countyName+" County</b>"+"<br>Occupied Homes: "+occupiedHomes);
+                    layer.bindPopup("<b>"+countyName+" County</b>"+"<br>Occupied Properties: "+occupiedHomes+"<br>Total Properties: "+totalHomes+"<br>Proportion: "+Math.round(proportionHomes)+"% of homes are occupied.");
                 }          
             }).addTo(map);
             
@@ -216,8 +192,34 @@
                 });
             });
 
-            drawLegend();
+            drawLegend(breaks);
 
+        }
+
+        function drawLegend(breaks){
+
+            var legend = L.control({position: 'topleft'});
+            legend.onAdd = function (map) {
+
+                var div = L.DomUtil.create('div', 'legend');
+                div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>"; 
+
+                for (var i = 0; i < breaks.length-1; i++) {
+                    var color = getColor(breaks[i + 1], breaks);
+
+                    div.innerHTML +=
+                        '<li><span style="background:' + color + '"></span> ' +
+                        (breaks[i]*100).toLocaleString() + '%&mdash; ' + 
+                        (breaks[i + 1]*100).toLocaleString() +'%</li>';
+                }
+
+                div.innerHTML += "</ul>"
+
+                return div;
+            };
+
+            legend.addTo(map);
+            
         }
 
     </script>
