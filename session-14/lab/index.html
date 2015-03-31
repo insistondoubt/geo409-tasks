@@ -48,7 +48,6 @@
             font-size: 1em;
             color: #001323;
         }
-       
         .legend {
             padding: 6px 8px;
             font-size: 1em;
@@ -75,6 +74,17 @@
         .leaflet-popup-content {
             max-width: 160px;   
         }
+        .info {
+            padding: 6px 8px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            text-align: right;   
+        }
+        .info h3 {
+            margin: 0;   
+        }
         
     </style>
 </head>
@@ -83,7 +93,17 @@
     <header>
         <h1>Map Title</h1>
         <h2>Map Subtitle</h2>
-    </header>
+    </header>    
+
+    <div id='ui-controls'>
+        <label>Choose a data attribute:<br>
+            <select name="occupied">
+                <option value="OWNED_MORT" selected>Owned with mortgage</option>
+                <option value="OWNED_FREE">Owned free and clear</option> 
+                <option value="RENTER">Rented</option>
+            </select>
+        </label>
+    </div>
 
     <div id='map'></div>
 
@@ -104,13 +124,19 @@
             dragging: false,
             zoomControl: false
         }
+
         var map = L.map('map', options);
-        
-        // Begin module 13 code here
         
         var dataLayer,
             attribute = "OWNED_MORT",
             norm = "OCCUPIED";
+
+        var labels = {
+            "OCCUPIED": "occupied units",
+            "OWNED_MORT": "% occupied housing units owned with mortgage",
+            "OWNED_FREE": "% occupied housing units owned free and clear",
+            "RENTER": "% occupied housing units rented" 
+        }
         
         $.getJSON("ky_counties_housing.json", function(data) {
             
@@ -125,8 +151,22 @@
                 }          
             }).addTo(map);
             
+            ui();
+
+            drawLegend();
+
             drawMap();
-              
+            
+            drawInfo();
+
+        });
+
+        $('select[name="occupied"]').change(function() {
+
+            attribute = $(this).val();
+
+            drawMap();
+
         });
         
         function drawMap() {
@@ -141,12 +181,27 @@
                     fillColor: getColor(props[attribute]/
                                         props[norm], breaks)
                 });
+
                 layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +
-                                attribute + ": " +
-                                ((props[attribute]/props[norm])*100).toLocaleString());  
+                                labels[attribute] + ": " +
+                                ((props[attribute]/props[norm])*100).toLocaleString()); 
+
+                layer.on('mouseover', function() {
+                    updateInfo(this);
+                });
+
+            });
+
+            dataLayer.on('mouseover', function() {
+                $(".info").show();
+            });
+
+            dataLayer.on('mouseout', function() {
+                $(".info").hide();    
             });
             
-            drawLegend(breaks);
+            updateLegend(breaks);
+
         }
         
         function getClassBreaks() {
@@ -159,11 +214,13 @@
             }); 
             
             var breaks = ss.jenks(values, 5);
+
             return breaks;
             
         }   
         
         function getColor(d, breaks) {
+
             if(d <= breaks[1]) {
                 return '#f1eef6';
             } else if(d <= breaks[2]) {
@@ -175,32 +232,86 @@
             } else if(d <= breaks[5]) {
                 return '#045a8d'
             }
+
         }
         
-        function drawLegend(breaks) {
+        function drawLegend() {
             
             var legend = L.control({position: 'topleft'});
 
             legend.onAdd = function (map) {
                 
                 var div = L.DomUtil.create('div', 'legend');
-                
-                div.innerHTML = "<h3>" + attribute + " per " + norm + "</h3><ul>"; 
 
-                for (var i = 0; i < breaks.length-1; i++) {
-                    var color = getColor(breaks[i + 1], breaks);
-                    div.innerHTML +=
-                        '<li><span style="background:' + color + '"></span> ' +
-                        (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                        (breaks[i + 1]*100).toLocaleString() + '</li>';
-                }
-                div.innerHTML += "</ul>"
                 return div;
-                
                     
             };
 
             legend.addTo(map);
+
+        }
+
+        function ui() {
+
+            var dataView = L.control({position: 'topleft'});
+
+            dataView.onAdd = function(map) {
+
+                var controls = L.DomUtil.get('ui-controls');
+                return controls;
+            }
+
+        dataView.addTo(map);
+
+        }
+
+        function updateLegend(breaks) {
+
+            var legend = $('.legend').html("<h3>" + labels[attribute] + "</h3><ul>"); 
+
+            for (var i = 0; i < breaks.length-1; i++) {
+
+                var color = getColor(breaks[i + 1], breaks);
+
+                legend.append('<li><span style="background:' + color + '"></span> ' +
+                    (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
+                    (breaks[i + 1]*100).toLocaleString() + '</li>');
+
+                }
+
+            legend.append("</ul>");
+
+        }
+
+        function drawInfo() {
+
+            var info = L.control({position: 'topright'});
+
+            info.onAdd = function(map) {
+
+                var div = L.DomUtil.create('div', 'info');
+
+                return div;  
+
+            }
+
+            info.addTo(map);
+            $(".info").hide();
+
+        }
+
+        function updateInfo(layer) {
+
+            var props = layer.feature.properties;
+
+            var html = "<h3>"+props['NAME']+" County</h3>"+
+                    "total # occupied units: <b>"+ props["OCCUPIED"]+"</b><br>"+
+                    "# owned with mortgage or loan: <b>"+ props["OWNED_MORT"]+"</b><br>"+
+                    "# owned free and clear: <b>"+ props["OWNED_FREE"]+"</b><br>"+
+                    "# occupied by renters: <b>"+ props["RENTER"]+"</b>"
+
+            $(".info").html(html);
+
         }
 
     </script>
