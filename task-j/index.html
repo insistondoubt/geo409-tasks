@@ -3,7 +3,7 @@
 
 <head>
     <meta charset=utf-8 />
-    <title>Kentucky Vacant Housing</title>
+    <title>Kentucky Housing</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
@@ -51,6 +51,7 @@
             background: rgba(255,255,255,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
+            width: 165px;
         }
         .legend h3 {
             font-size: 1.1em;
@@ -77,7 +78,8 @@
             background: rgba(255,255,255,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
-            text-align: right;   
+            text-align: left;   
+            width: 270px;
         }
         .info h3 {
             margin: 0;   
@@ -107,16 +109,17 @@
 
 <body>
     <header>
-        <h1>Kentucky Vacant Homes</h1>
+        <h1>Kentucky Housing Choropleth Map</h1>
         <h2>Showing Vacant Properties</h2>
     </header>    
 
     <div id='ui-controls'>
         <label>Choose a data attribute:<br>
-            <select name="occupied">
-                <option value="OWNED_MORT" selected>Owned with mortgage</option>
-                <option value="OWNED_FREE">Owned free and clear</option> 
-                <option value="RENTER">Rented</option>
+            <select name="vacant">
+                <option value="VACANT" selected>Vacant Properties</option>
+                <option value="VACANT_FOR">For Rent</option> 
+                <option value="VACANT_FO2">For Sale</option>
+                <option value="VACANT_SEA">Seasonal Use</option>
             </select>
         </label>
     </div>
@@ -129,7 +132,7 @@
         <p>This is a choropleth map showing the number of occupied properties (rented or owned) expressed as a proportion of the total properties per county in Kentucky.</p>
         <p>Click on a county to see its name, the number of occupied and total properties, and the percentage of homes occupied in that county. In each county, the darker the blue, the higher the proportion of occupied properties in the county.</p>
         <h3>Data Sources</h3>
-        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-i/index.html">Github</a>.
+        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-j/index.html">Github</a>.
         </p>
     </footer>
 
@@ -147,14 +150,14 @@
         var map = L.map('map', options);
         
         var dataLayer,
-            attribute = "OWNED_MORT",
-            norm = "OCCUPIED";
+            attribute = "VACANT",
+            norm = "TOTAL";
 
         var labels = {
-            "OCCUPIED": "occupied units",
-            "OWNED_MORT": "% occupied housing units owned with mortgage",
-            "OWNED_FREE": "% occupied housing units owned free and clear",
-            "RENTER": "% occupied housing units rented" 
+            "VACANT": "Vacant Properties",
+            "VACANT_FOR": "Vacant Properties for Rent",
+            "VACANT_FO2": "Vacant Properties for Sale",
+            "VACANT_SEA": "Seasonally Used Properties" 
         }
         
         $.getJSON("ky_counties_housing.json", function(data) {
@@ -180,7 +183,7 @@
 
         });
 
-        $('select[name="occupied"]').change(function() {
+        $('select[name="vacant"]').change(function() {
 
             attribute = $(this).val();
 
@@ -293,8 +296,8 @@
                 var color = getColor(breaks[i + 1], breaks);
 
                 legend.append('<li><span style="background:' + color + '"></span> ' +
-                    (breaks[i]*100).toLocaleString() + ' &mdash; ' + 
-                    (breaks[i + 1]*100).toLocaleString() + '</li>');
+                    (breaks[i]*100).toLocaleString() + '% &mdash; ' + 
+                    (breaks[i + 1]*100).toLocaleString() + '%</li>');
 
                 }
 
@@ -324,10 +327,10 @@
             var props = layer.feature.properties;
 
             var html = "<h3>"+props['NAME']+" County</h3>"+
-                    "total # occupied units: <b>"+ props["OCCUPIED"]+"</b><br>"+
-                    "# owned with mortgage or loan: <b>"+ props["OWNED_MORT"]+"</b><br>"+
-                    "# owned free and clear: <b>"+ props["OWNED_FREE"]+"</b><br>"+
-                    "# occupied by renters: <b>"+ props["RENTER"]+"</b>"
+                    "Total Vacant Properties: <b>"+ props["VACANT"]+"</b> ("+(props["VACANT"]/props["TOTAL"]*100).toLocaleString()+"%)<br>"+
+                    "Total Properties for Rent: <b>"+ props["VACANT_FOR"]+"</b> ("+(props["VACANT_FOR"]/props["TOTAL"]*100).toLocaleString()+"%)<br>"+
+                    "Total Properties for Sale: <b>"+ props["VACANT_FO2"]+"</b> ("+(props["VACANT_FO2"]/props["TOTAL"]*100).toLocaleString()+"%)<br>"+
+                    "Total Seasonally Used Properties: <b>"+ props["VACANT_SEA"]+"</b>  ("+(props["VACANT_SEA"]/props["TOTAL"]*100).toLocaleString()+"%)"
 
             $(".info").html(html);
 
