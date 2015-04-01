@@ -37,6 +37,9 @@
             background: whitesmoke;
             border: 2px solid #dddedf;
         }
+        #ui-controls {
+            display: none;
+        }
         footer {
             padding: 6px 10%;
             width: 80%;
@@ -302,6 +305,8 @@
 
         dataView.addTo(map);
 
+        document.getElementById("ui-controls").style.display = "initial";
+
         }
 
         function updateLegend(breaks) {
@@ -335,6 +340,7 @@
             }
 
             info.addTo(map);
+
             $(".info").hide();
 
         }
