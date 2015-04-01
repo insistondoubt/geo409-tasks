@@ -3,16 +3,13 @@
 
 <head>
     <meta charset=utf-8 />
-    <title>Task J starter template</title>
+    <title>Kentucky Vacant Housing</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="simple_statistics.js"></script>
-
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-
     <style>
         body {
             margin: 0;
@@ -85,14 +82,33 @@
         .info h3 {
             margin: 0;   
         }
-        
+        .author-info {
+            font-size: 90%;
+            font-style: italic;
+            text-align: right;
+        }
+        a:link {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:visited {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a:active {
+            color: #949494;
+            font-weight: bold;
+            text-decoration: none;
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Map Title</h1>
-        <h2>Map Subtitle</h2>
+        <h1>Kentucky Vacant Homes</h1>
+        <h2>Showing Vacant Properties</h2>
     </header>    
 
     <div id='ui-controls'>
@@ -108,9 +124,12 @@
     <div id='map'></div>
 
     <footer>
-        <p>Map authored by YOUR NAME</p>
-        <p>Additional information about the data and map goes here.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis urna magna, maximus nec laoreet sit amet, dictum ultricies nibh. Ut id auctor lacus. Nam a dolor et justo luctus luctus. Duis a elit eget risus dictum vehicula id eu elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sed enim nisl. Vestibulum commodo imperdiet lacus, sed facilisis erat placerat sit amet. Nulla consequat malesuada neque eget aliquet. Integer non convallis nisl, gravida ultrices ex. Fusce nec vestibulum elit. Sed elementum lectus ipsum, vulputate elementum ex laoreet a. Aenean eu ex varius, varius felis vitae, efficitur nulla. Quisque pretium laoreet ante, in sodales dui vehicula at. Mauris eu sem sapien.
+        <p class='author-info'>Map authored by Daniel Cockayne</p>
+        <h3>About This Map</h3>
+        <p>This is a choropleth map showing the number of occupied properties (rented or owned) expressed as a proportion of the total properties per county in Kentucky.</p>
+        <p>Click on a county to see its name, the number of occupied and total properties, and the percentage of homes occupied in that county. In each county, the darker the blue, the higher the proportion of occupied properties in the county.</p>
+        <h3>Data Sources</h3>
+        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-i/index.html">Github</a>.
         </p>
     </footer>
 
