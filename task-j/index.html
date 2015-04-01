@@ -204,12 +204,19 @@
                                         props[norm], breaks)
                 });
 
-                layer.bindPopup("<b>"+props["NAME"]+" County</b></br>" +
-                                labels[attribute] + ": " +
-                                ((props[attribute]/props[norm])*100).toLocaleString()); 
-
                 layer.on('mouseover', function() {
                     updateInfo(this);
+
+                    layer.setStyle({
+                        color: 'yellow'
+                    });
+                    
+                });
+
+                layer.on('mouseout', function() {
+                    layer.setStyle({
+                        color: '#dddddd'
+                    });
                 });
 
             });
