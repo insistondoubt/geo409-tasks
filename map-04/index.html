@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 
 <head>
+
 	<title>GEO409 Map 4</title>
+
+	<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 	
 	<style>
 		body {
@@ -75,7 +83,31 @@
         <p>This is a choropleth map showing the number of vacant properties expressed as a proportion of the total properties per county in Kentucky.</p>
         <p>Use the drop-down menu to select different attributes related to vacant properties. Mouse-over on a county to see its name, statistics about vacant properties, and the percentage of vacant properties in that county. In each county, the darker the blue, the higher the proportion of occupied properties in the county.</p>
         <h3>Data Sources</h3>
-        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/task-j/index.html">Github</a>.
+        <p>The code for this map can be found on <a href="https://github.com/insistondoubt/geo409-tasks/blob/master/map-04/index.html">Github</a>.
         </p>
     </footer>
+
+    <script>
+
+    	var map = L.map('map', options);
+
+    	var options = {
+            center: [38.2, -85.8],
+            zoom: 7,
+            minZoom: 7,
+            maxZoom: 7,
+            dragging: false,
+            zoomControl: false
+        }
+
+        var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            subdomains: 'abcd',
+            minZoom: 0,
+            maxZoom: 18
+        });
+
+        map.addLayer(tiles);
+
+    </script>
 </body>
